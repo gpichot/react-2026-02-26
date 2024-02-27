@@ -1,4 +1,5 @@
 import { useState } from "react";
+import InputControl from "./InputControl";
 
 export interface PokemonCreatePayload {
   name: string;
@@ -26,46 +27,34 @@ export default function PokemonForm() {
 
   return (
     <form onSubmit={onSubmit}>
-      <div>
-        <label>
-          Name:
-          <input
-            type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Type:
-          <input
-            type="text"
-            value={type}
-            onChange={(event) => setType(event.target.value)}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Weight:
-          <input
-            type="number"
-            value={weight}
-            onChange={(event) => setWeight(event.target.valueAsNumber)}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Height:
-          <input
-            type="number"
-            value={height}
-            onChange={(event) => setHeight(event.target.valueAsNumber)}
-          />
-        </label>
-      </div>
+      <InputControl
+        label="Name"
+        name="name"
+        type="text"
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+      />
+      <InputControl
+        label="Type"
+        name="type"
+        type="text"
+        value={type}
+        onChange={(event) => setType(event.target.value)}
+      />
+      <InputControl
+        label="Weight"
+        name="weight"
+        type="number"
+        value={weight}
+        onChange={(event) => setWeight(event.target.valueAsNumber)}
+      />
+      <InputControl
+        label="Height"
+        name="height"
+        type="number"
+        value={height}
+        onChange={(event) => setHeight(event.target.valueAsNumber)}
+      />
       <button type="submit">Create</button>
     </form>
   );
