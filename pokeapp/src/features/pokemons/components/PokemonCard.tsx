@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PokemonDetail } from "../types";
 import styles from "./PokemonCard.module.css";
+import { Link } from "react-router-dom";
 
 interface PokemonCardProps {
   pokemon: PokemonDetail;
@@ -34,6 +35,7 @@ export default function PokemonCard({ pokemon }: PokemonCardProps) {
           </span>
         ))}
       </div>
+      <Link to={`/pokemons/${pokemon.id}`}>Voir le détail</Link>
     </div>
   );
 }

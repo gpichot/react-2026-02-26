@@ -1,0 +1,7 @@
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  text-align: left;
+  padding-bottom: 0.5rem;
+}
