@@ -5,6 +5,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import WelcomePage from "./pages/WelcomePage";
 import Layout from "./pages/Layout";
 import PokemonDetailsPage from "./features/pokemons/pages/PokemonDetailsPage";
+import { CounterProvider } from "./CounterContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -14,7 +15,12 @@ function App() {
       children: [
         {
           path: "/",
-          element: <PokemonList />,
+          element: (
+            <>
+              <PokemonList />
+              <PokemonList />
+            </>
+          ),
         },
         {
           path: "/welcome/:name",
@@ -31,7 +37,11 @@ function App() {
       ],
     },
   ]);
-  return <RouterProvider router={router} />;
+  return (
+    <CounterProvider>
+      <RouterProvider router={router} />
+    </CounterProvider>
+  );
 }
 
 export default App;

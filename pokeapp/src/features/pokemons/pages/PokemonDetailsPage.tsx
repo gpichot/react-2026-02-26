@@ -1,13 +1,21 @@
 import { useParams } from "react-router-dom";
-import { pokemonsList } from "../mocks";
+import useFetchResource from "../../../hooks/useFetchResource";
+import { PokemonDetail } from "../../../types";
 
 export default function PokemonDetailsPage() {
   const { id } = useParams();
+  const query = useFetchResource<PokemonDetail>(
+    `https://pokeapi.fly.dev/gpichot-2024-02-26/pokemons/${id}`
+  );
 
-  const pokemon = pokemonsList.find((x) => x.id === Number(id));
+  if (query.isLoading) {
+    return <p>Chargement en cours</p>;
+  }
 
-  if (!pokemon) {
-    return <h1>Pokemon not found</h1>;
+  const { data: pokemon } = query;
+
+  if (!pokemon || query.error) {
+    return <h1>Error</h1>;
   }
 
   return (

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InputControl from "../../../components/InputControl";
 import { useNavigate } from "react-router-dom";
 import { RouterUrls } from "../../../router-urls";
+import { useCreatePokemonMutation } from "../../../api-hooks/mutations";
 
 export interface PokemonCreatePayload {
   name: string;
@@ -16,6 +17,7 @@ export default function PokemonForm() {
   const [weight, setWeight] = useState(0);
   const [height, setHeight] = useState(0);
   const navigate = useNavigate();
+  const mutation = useCreatePokemonMutation();
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,13 +29,27 @@ export default function PokemonForm() {
     };
     console.log(payload);
 
-    navigate(RouterUrls.homepage());
+    mutation.mutate(payload, {
+      onSuccess() {
+        navigate(RouterUrls.homepage());
+      },
+    });
   };
 
   const isFormValid = name && type;
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  // inputRef.current?.focus(), inputRef.current?.getBoundingClientRect()
+  type InputRefs = {
+    name: HTMLInputElement | null;
+    type: HTMLInputElement | null;
+    weight: HTMLInputElement | null;
+    height: HTMLInputElement | null;
+  };
+  const inputRef = React.useRef<InputRefs>({
+    name: null,
+    type: null,
+    weight: null,
+    height: null,
+  });
 
   return (
     <form
@@ -43,13 +59,22 @@ export default function PokemonForm() {
         maxWidth: 300,
       }}
     >
+      {/*<button type="button" onClick={() => inputRef.current.name?.focus()}>
+        Focus name
+      </button>
+      <button type="button" onClick={() => inputRef.current.type?.focus()}>
+        Focus type
+      </button>
+      <button type="button" onClick={() => inputRef.current.height?.focus()}>
+        Focus height
+    </button>*/}
       <InputControl
         label="Name"
         name="name"
         type="text"
         value={name}
         onChange={(event) => setName(event.target.value)}
-        inputRef={inputRef}
+        inputRef={(ref) => (inputRef.current.name = ref)}
       />
       <InputControl
         label="Type"
@@ -57,6 +82,10 @@ export default function PokemonForm() {
         type="text"
         value={type}
         onChange={(event) => setType(event.target.value)}
+        inputRef={(ref) => (inputRef.current.type = ref)}
+        onBlur={() => {
+          inputRef.current.name?.focus();
+        }}
       />
       <InputControl
         label="Weight"
@@ -64,6 +93,7 @@ export default function PokemonForm() {
         type="number"
         value={weight}
         onChange={(event) => setWeight(event.target.valueAsNumber)}
+        inputRef={(ref) => (inputRef.current.weight = ref)}
       />
       <InputControl
         label="Height"
@@ -71,9 +101,10 @@ export default function PokemonForm() {
         type="number"
         value={height}
         onChange={(event) => setHeight(event.target.valueAsNumber)}
+        inputRef={(ref) => (inputRef.current.height = ref)}
       />
 
-      <button type="submit" disabled={!isFormValid}>
+      <button type="submit" disabled={!isFormValid || mutation.isPending}>
         Create
       </button>
     </form>
